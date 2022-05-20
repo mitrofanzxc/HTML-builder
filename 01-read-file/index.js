@@ -1,7 +1,11 @@
-const fs = require('node:fs');
+const path = require('node:path');
+const { createReadStream } = require('node:fs');
+const process = require('node:process');
+const { stdout } = process;
 
-const stream = fs.createReadStream('./01-read-file/text.txt', 'utf-8');
+const pathName = path.join(__dirname, 'text.txt');
+const stream = createReadStream(pathName, 'utf-8');
 
-stream.on('data', (chunk) => console.log(chunk));
-stream.on('end', () => console.log('Stream end'));
-stream.on('error', (error) => console.log('Error, try again later...', error.message));
+stream.on('data', (chunk) => stdout.write(chunk));
+stream.on('end', () => stdout.write('\nStream end'));
+stream.on('error', (error) => stdout.write('\nError, try again later...', error.message));
