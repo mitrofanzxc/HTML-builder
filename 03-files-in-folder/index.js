@@ -4,9 +4,11 @@ const path = require('node:path');
 const pathName = path.join(__dirname, 'secret-folder');
 
 const createFileList = async () => {
-  const files = await fs.readdir(pathName);
+  const files = await fs.readdir(pathName, { withFileTypes: true });
   for (const file of files) {
-    console.log(file.toString().split('.').join(' - '));
+    if (file.isFile()) {
+      console.log(file.name.split('.').join(' - '));
+    }
   }
 };
 
