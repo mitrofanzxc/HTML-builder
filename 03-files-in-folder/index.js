@@ -1,17 +1,26 @@
-const fs = require('fs/promises');
-const path = require('node:path');
+const { readdir, stat } = require('fs');
+const path = require('path');
 
-const pathName = path.join(__dirname, 'secret-folder');
+const pathFolderName = path.join(__dirname, 'secret-folder');
 
-const createFileList = async () => {
-  const files = await fs.readdir(pathName, { withFileTypes: true });
-  for (const file of files) {
-    if (file.isFile()) {
-      const extname = path.extname(file.name);
-      const fileName = file.name.replace(extname, '').trim();
-      console.log(`${fileName} - ${extname.slice(1)}`);
-    }
+readdir(pathFolderName, { withFileTypes: true }, (err, elements) => {
+  if (err) {
+    throw err;
+  } else {
+    const files = elements.filter((element) => element.isFile());
+
+    files.forEach((file) => {
+      const pathFileName = path.join(pathFolderName, file.name);
+      const extName = path.extname(file.name);
+      const fileName = file.name.replace(extName, '').trim();
+
+      stat(pathFileName, (err, stats) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(`${fileName} - ${extName.slice(1)} - ${stats.size.toString()} bytes`);
+        }
+      });
+    });
   }
-};
-
-createFileList();
+});
