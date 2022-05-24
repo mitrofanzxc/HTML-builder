@@ -1,12 +1,17 @@
-const process = require('node:process');
-const { stdin, stdout } = process;
+const readline = require('node:readline');
+const { stdin: input, stdout: output } = require('node:process');
 
-stdout.write('Hello, nice to meet you! Please, write something...\n');
-stdin.on('data', (data) => {
-  stdout.write(data);
-  // process.exit();
+const rl = readline.createInterface({ input, output });
+
+rl.write('Hello, nice to meet you! Please, write something...\n');
+
+rl.on('SIGINT', () => {
+  console.log('We will miss you, come back soon!');
+  rl.close();
 });
 
-process.on('exit', () => {
-  console.log('Process completed, thank you.');
+rl.on('line', (input) => {
+  if (input === 'exit') {
+    rl.close();
+  }
 });
