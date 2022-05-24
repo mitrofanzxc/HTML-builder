@@ -7,7 +7,9 @@ const createFileList = async () => {
   const files = await fs.readdir(pathName, { withFileTypes: true });
   for (const file of files) {
     if (file.isFile()) {
-      console.log(file.name.split('.').join(' - '));
+      const extname = path.extname(file.name);
+      const fileName = file.name.replace(extname, '').trim();
+      console.log(`${fileName} - ${extname.slice(1)}`);
     }
   }
 };
